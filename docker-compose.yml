@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: candles_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./Mysql:/docker-entrypoint-initdb.d
+    networks:
+      - candles-network
+
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - candles-network
+
+networks:
+  candles-network:
+    driver: bridge
